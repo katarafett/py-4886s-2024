@@ -9,16 +9,19 @@
 
 # Library imports
 # from vex import *
-from vex import *
+import vex
 
-import robot_config
-import auton
-import opcontrol
-import preauton
-import tune_pid
-import util
+from src.robot_config import *
+from src import auton
+from src import opcontrol
+from src import preauton
+from src import tune_pid
+from src import util
 
-# Brain should be defined by default
-brain=Brain()
+preauton.preauton()
 
-brain.screen.print("Hello V5")
+do_testing = False
+if do_testing:
+    field_controller = vex.Competition(opcontrol.opcontrol, auton.autonomous)
+else:
+    print("do nothing")
