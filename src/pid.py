@@ -1,7 +1,7 @@
 import vex
 from robot_config import *
 
-class PID:
+class Pid:
     def __init__(self, init_kp, init_ki, init_kd):
         self.kp = init_kp
         self.ki = init_ki

@@ -1,3 +1,13 @@
+import vex
+from stddefs import *
+from robot_config import *
+
+# Top of file is new functions
+# Bottom of file is making shorthand for long function names, like:
+# src.robot_config.drive_r.position(vex.RotationUnits.REV)
+
+# UTILITY FUNCTIONS
+
 class EdgeDetection:
     def __init__(self, value):
         self.prev_val = value
@@ -30,3 +40,58 @@ class EdgeDetection:
 
         self.prev_val = value
         return edge
+
+def stop_distance(velocity, acceleration, target_velocity = 0):
+    return -(target_velocity ** 2 - velocity ** 2 ) / (2 * acceleration);
+
+# SHORTHAND
+global DRIVE_REV_TO_IN
+DRIVE_REV_TO_IN = MEDIUM_OMNI_CIRC * (36.0/48.0)
+
+def pos_drive_r():
+    return drive_r.position(REV) * DRIVE_REV_TO_IN
+def pos_drive_l():
+    return drive_l.position(REV) * DRIVE_REV_TO_IN
+def vel_drive_r():
+    return drive_r.velocity(RPM) * DRIVE_REV_TO_IN
+def vel_drive_l():
+    return drive_l.velocity(RPM) * DRIVE_REV_TO_IN
+
+# Controller joystick shorthand
+def axis_rx():
+    return master.axis1.value()
+def axis_ry():
+    return master.axis2.value()
+def axis_lx():
+    return master.axis3.value()
+def axis_ly():
+    return master.axis4.value()
+
+# Control back button shorthand
+def btn_r1():
+    return master.buttonR1.pressing()
+def btn_r2():
+    return master.buttonR2.pressing()
+def btn_l1():
+    return master.buttonL1.pressing()
+def btn_l2():
+    return master.buttonL2.pressing()
+
+# Controller front button shorthand
+def btn_a():
+    return master.buttonA.pressing()
+def btn_b():
+    return master.buttonB.pressing()
+def btn_x():
+    return master.buttonX.pressing()
+def btn_y():
+    return master.buttonY.pressing()
+
+def btn_right():
+    return master.buttonRight.pressing()
+def btn_left():
+    return master.buttonLeft.pressing()
+def btn_up():
+    return master.buttonUp.pressing()
+def btn_down():
+    return master.buttonDown.pressing()

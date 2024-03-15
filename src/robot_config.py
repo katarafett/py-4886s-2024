@@ -1,4 +1,5 @@
 from vex import *
+from stddefs import *
 
 global brain
 brain = Brain()
@@ -52,3 +53,7 @@ global clock
 clock = Timer()
 global auton_selector
 auton_selector = DigitalIn(brain.three_wire_port.h)
+
+# Globals
+global all_globals
+all_globals = TrackedGlobals(0)
