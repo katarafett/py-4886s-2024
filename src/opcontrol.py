@@ -14,7 +14,6 @@ def opcontrol():
     fold_switch = util.EdgeDetection(False)
     wing_r_switch = util.EdgeDetection(False)
     wing_l_switch = util.EdgeDetection(False)
-    hang_switch = util.EdgeDetection(False)
 
     # Reset drive velocity
     drive_l.stop(vex.BrakeType.COAST)
@@ -23,13 +22,15 @@ def opcontrol():
     while(True):
         opdrive(TSA, 1.0, SENSITIVITY)
 
+        hang.spin(FORWARD, (master.buttonY.pressing() - master.buttonRight.pressing()) * 100, vex.VelocityUnits.PERCENT)
+
         # Set a "shift" key
         shifted = master.buttonL2.pressing()
 
         # Base layer
         if not shifted:
             # Intake
-            intake.spin(FORWARD, (master.buttonR1.pressing() - master.buttonR2.pressing()) * 100, vex.VelocityPercentUnits)
+            intake.spin(FORWARD, (master.buttonR1.pressing() - master.buttonR2.pressing()) * 100, vex.VelocityUnits.PERCENT)
             # Change intake height
             intake_fold.set(fold_switch.is_redge(master.buttonL1.pressing()))
 
@@ -38,7 +39,8 @@ def opcontrol():
             # Wings
             wing_l.set(wing_l_switch.is_redge(master.buttonL1.pressing()))
             wing_r.set(wing_r_switch.is_redge(master.buttonR1.pressing()))
-        # y hang
+
+        vex.wait(20, vex.TimeUnits.MSEC)
 
 def opdrive(control_scheme, speed_mod, turn_mod):
     axis_rx = master.axis1.value()
@@ -49,9 +51,11 @@ def opdrive(control_scheme, speed_mod, turn_mod):
     if control_scheme == TNK:
         drive_r.spin(FORWARD, axis_ry * speed_mod, vex.VelocityUnits.PERCENT)
         drive_l.spin(FORWARD, axis_lx * speed_mod, vex.VelocityUnits.PERCENT)
+    # Two stick arcade
     elif control_scheme == TSA:
         drive_r.spin(FORWARD, (axis_lx - axis_rx * turn_mod) * speed_mod, vex.VelocityUnits.PERCENT)
         drive_l.spin(FORWARD, (axis_lx + axis_rx * turn_mod) * speed_mod, vex.VelocityUnits.PERCENT)
+    # One stick arcade
     elif control_scheme == OSA:
         drive_r.spin(FORWARD, (axis_ly - axis_lx * turn_mod) * speed_mod, vex.VelocityUnits.PERCENT)
         drive_l.spin(FORWARD, (axis_ly + axis_lx * turn_mod) * speed_mod, vex.VelocityUnits.PERCENT)
