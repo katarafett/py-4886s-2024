@@ -37,11 +37,13 @@ intake = Motor(Ports.PORT9, GearSetting.RATIO_18_1, False);
 global hang
 hang = Motor(Ports.PORT10, GearSetting.RATIO_36_1, False);
 
-# Wings
+# Cylinders
 global wing_r
 wing_r = DigitalOut(brain.three_wire_port.a)
 global wing_l
 wing_l = DigitalOut(brain.three_wire_port.b)
+global intake_fold
+intake_fold = DigitalOut(brain.three_wire_port.c)
 
 # Sensors
 global imu
@@ -49,4 +51,4 @@ imu = Inertial(Ports.PORT11)
 global clock
 clock = Timer()
 global auton_selector
-auton_selector = DigitalIn(brain.three_wire_port.a)
+auton_selector = DigitalIn(brain.three_wire_port.h)

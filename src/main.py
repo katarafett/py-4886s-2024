@@ -11,17 +11,17 @@
 # from vex import *
 import vex
 
-from src.robot_config import *
-from src import auton
-from src import opcontrol
-from src import preauton
-from src import tune_pid
-from src import util
+from robot_config import *
+import auton
+import opcontrol
+import preauton
+import tune_pid
+import util
 
 preauton.preauton()
 
-do_testing = False
+do_testing = True
 if do_testing:
-    field_controller = vex.Competition(opcontrol.opcontrol, auton.autonomous)
-else:
     print("do nothing")
+else:
+    field_controller = vex.Competition(opcontrol.opcontrol, auton.autonomous)
