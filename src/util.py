@@ -44,6 +44,18 @@ class EdgeDetection:
 def stop_distance(velocity, acceleration, target_velocity = 0):
     return -(target_velocity ** 2 - velocity ** 2 ) / (2 * acceleration);
 
+def handle_acceleration(position, distance, velocity, max_velocity, acceleration, tick_rate, do_decel):
+    if (abs(position) + stop_distance(velocity, acceleration) >= abs(distance)) and do_decel:
+        return velocity - acceleration / tick_rate
+    if velocity < max_velocity:
+        return velocity + acceleration * tick_rate
+    return max_velocity
+
+def within_range(value, base_value, range):
+    if value <= base_value + range and value >= base_value - range:
+        return True
+    return False
+
 # SHORTHAND
 global DRIVE_REV_TO_IN
 DRIVE_REV_TO_IN = MEDIUM_OMNI_CIRC * (36.0/48.0)
