@@ -10,9 +10,10 @@
 # Library imports
 # from vex import *
 import vex
+import math
 
-from robot_config import *
-import auton
+# from robot_config import *
+# import auton
 import opcontrol
 import preauton
 import tune_pid
@@ -20,8 +21,9 @@ import util
 
 preauton.preauton()
 
-do_testing = True
+do_testing = False
 if do_testing:
     print("do nothing")
 else:
-    field_controller = vex.Competition(opcontrol.opcontrol, auton.autonomous)
+    print("start of main program")
+    field_controller = vex.Competition(opcontrol.opcontrol, opcontrol.opcontrol)
