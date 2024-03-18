@@ -50,8 +50,10 @@ DEG = vex.RotationUnits.DEG
 
 # Globally tracked things
 class TrackedGlobals:
-    def __init__(self, target_heading):
+    def __init__(self, target_heading, wheel_to_wheel_dist, imu_correction):
         self.target_heading = target_heading
+        self.wheel_to_wheel_dist = wheel_to_wheel_dist
+        self.imu_correction = imu_correction
     def set_target_heading(self, value):
         self.target_heading = value
     def inc_target_heading(self, value):

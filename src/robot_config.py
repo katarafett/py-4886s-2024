@@ -56,4 +56,4 @@ auton_selector = DigitalIn(brain.three_wire_port.h)
 
 # Globals
 global all_globals
-all_globals = TrackedGlobals(0)
+all_globals = TrackedGlobals(0, 10.75, (3600 / 3593.6))

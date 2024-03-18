@@ -57,6 +57,9 @@ def vel_drive_r():
 def vel_drive_l():
     return drive_l.velocity(RPM) * DRIVE_REV_TO_IN
 
+def imu_rotation():
+    return imu.rotation() * all_globals.imu_correction
+
 # Controller joystick shorthand
 def axis_rx():
     return master.axis1.value()
