@@ -1,11 +1,11 @@
+import vex
+import math
+
+
 
 # ./src/stddefs.py ---
 # Transferred from stddefs.h, so incomplete. I've not made shorthand for every
 # unit or unit conversion
-
-import math
-import vex
-from robot_config import *
 
 # Conversions
 global RAD_TO_DEG
@@ -48,8 +48,6 @@ REV = vex.RotationUnits.REV
 global DEG
 DEG = vex.RotationUnits.DEG
 
-
-
 # Globally tracked things
 class TrackedGlobals:
     def __init__(self, target_heading, wheel_to_wheel_dist, imu_correction):
@@ -61,71 +59,70 @@ class TrackedGlobals:
     def inc_target_heading(self, value):
         self.target_heading += value
 
+
+
 # ./src/robot_config.py ---
-from vex import *
-from stddefs import *
 
 global brain
-brain = Brain()
+brain = vex.Brain()
 global master
-master = Controller()
+master = vex.Controller()
 
 # Right Drive
 global drive_r1
-drive_r1 = Motor(Ports.PORT1, GearSetting.RATIO_6_1, False)
+drive_r1 = vex.Motor(vex.Ports.PORT1, vex.GearSetting.RATIO_6_1, False)
 global drive_r2
-drive_r2 = Motor(Ports.PORT2, GearSetting.RATIO_6_1, False)
+drive_r2 = vex.Motor(vex.Ports.PORT2, vex.GearSetting.RATIO_6_1, False)
 global drive_r3
-drive_r3 = Motor(Ports.PORT3, GearSetting.RATIO_6_1, False)
+drive_r3 = vex.Motor(vex.Ports.PORT3, vex.GearSetting.RATIO_6_1, False)
 global drive_r4
-drive_r4 = Motor(Ports.PORT4, GearSetting.RATIO_6_1, False)
+drive_r4 = vex.Motor(vex.Ports.PORT4, vex.GearSetting.RATIO_6_1, False)
 
 global drive_r
-drive_r = MotorGroup(drive_r1, drive_r2, drive_r3, drive_r4);
+drive_r = vex.MotorGroup(drive_r1, drive_r2, drive_r3, drive_r4);
 
 # Left Drive
 global drive_l1
-drive_l1 = Motor(Ports.PORT5, GearSetting.RATIO_6_1, True)
+drive_l1 = vex.Motor(vex.Ports.PORT5, vex.GearSetting.RATIO_6_1, True)
 global drive_l2
-drive_l2 = Motor(Ports.PORT6, GearSetting.RATIO_6_1, True)
+drive_l2 = vex.Motor(vex.Ports.PORT6, vex.GearSetting.RATIO_6_1, True)
 global drive_l3
-drive_l3 = Motor(Ports.PORT7, GearSetting.RATIO_6_1, True)
+drive_l3 = vex.Motor(vex.Ports.PORT7, vex.GearSetting.RATIO_6_1, True)
 global drive_l4
-drive_l4 = Motor(Ports.PORT8, GearSetting.RATIO_6_1, True)
+drive_l4 = vex.Motor(vex.Ports.PORT8, vex.GearSetting.RATIO_6_1, True)
 
 global drive_l
-drive_l = MotorGroup(drive_l1, drive_l2, drive_l3, drive_l4);
+drive_l = vex.MotorGroup(drive_l1, drive_l2, drive_l3, drive_l4);
 
 # Subsystem 3
 global intake
-intake = Motor(Ports.PORT9, GearSetting.RATIO_18_1, False);
+intake = vex.Motor(vex.Ports.PORT9, vex.GearSetting.RATIO_18_1, False);
 global hang
-hang = Motor(Ports.PORT10, GearSetting.RATIO_36_1, False);
+hang = vex.Motor(vex.Ports.PORT10, vex.GearSetting.RATIO_36_1, False);
 
 # Cylinders
 global wing_r
-wing_r = DigitalOut(brain.three_wire_port.a)
+wing_r = vex.DigitalOut(brain.three_wire_port.a)
 global wing_l
-wing_l = DigitalOut(brain.three_wire_port.b)
+wing_l = vex.DigitalOut(brain.three_wire_port.b)
 global intake_fold
-intake_fold = DigitalOut(brain.three_wire_port.c)
+intake_fold = vex.DigitalOut(brain.three_wire_port.c)
 
 # Sensors
 global imu
-imu = Inertial(Ports.PORT11)
+imu = vex.Inertial(vex.Ports.PORT11)
 global clock
-clock = Timer()
+clock = vex.Timer()
 global auton_selector
-auton_selector = DigitalIn(brain.three_wire_port.h)
+auton_selector = vex.DigitalIn(brain.three_wire_port.h)
 
 # Globals
 global all_globals
 all_globals = TrackedGlobals(0, 10.75, (3600 / 3593.6))
 
+
+
 # ./src/util.py ---
-import vex
-from stddefs import *
-from robot_config import *
 
 # Top of file is new functions
 # Bottom of file is making shorthand for long function names, like:
@@ -190,9 +187,9 @@ def pos_drive_r():
 def pos_drive_l():
     return drive_l.position(REV) * DRIVE_REV_TO_IN
 def vel_drive_r():
-    return drive_r.velocity(RPM) * DRIVE_REV_TO_IN
+    return drive_r.velocity(vex.RPM) * DRIVE_REV_TO_IN
 def vel_drive_l():
-    return drive_l.velocity(RPM) * DRIVE_REV_TO_IN
+    return drive_l.velocity(vex.RPM) * DRIVE_REV_TO_IN
 
 def imu_rotation():
     return imu.rotation() * all_globals.imu_correction
@@ -236,9 +233,9 @@ def btn_up():
 def btn_down():
     return master.buttonDown.pressing()
 
+
+
 # ./src/pid.py ---
-import vex
-from robot_config import *
 
 class Pid:
     def __init__(self, init_kp, init_ki, init_kd):
@@ -283,16 +280,14 @@ class Pid:
 
         return p_term + i_term + d_term
 
+
+
 # ./src/movement.py ---
-from robot_config import *
-from pid import Pid
-from util import *
-import vex
 
 # takes inches, target inches per second (velocity),
 # inches per second squared (acceleration), and whether to decelerate
 def drive_straight(inches, target_ips, ipss, do_decel = True):
-    # Loop wait times
+    # Loop vex.wait times
     TICK_PER_SEC = 50    # tick per sec
     MSEC_PER_TICK = 20   # ms per tick
 
@@ -308,8 +303,8 @@ def drive_straight(inches, target_ips, ipss, do_decel = True):
     MULTIPLIER = 1.2        # not sure why I need this, but it makes it so that
     inches *= MULTIPLIER    # passing 4 inches actually moves 4 inches
 
-    drive_r.stop(COAST)
-    drive_l.stop(COAST)
+    drive_r.stop(vex.COAST)
+    drive_l.stop(vex.COAST)
 
     pid_drive_r = Pid(DRIVE_KP, DRIVE_KI, DRIVE_KD)
     pid_drive_l = Pid(DRIVE_KP, DRIVE_KI, DRIVE_KD)
@@ -346,20 +341,20 @@ def drive_straight(inches, target_ips, ipss, do_decel = True):
 
         vel_rpm = ips / DRIVE_REV_TO_IN * 60
         
-        drive_r.spin(FORWARD, dir_mod * vel_rpm + adjustment_r - adjustment_dir, RPM)
-        drive_l.spin(FORWARD, dir_mod * vel_rpm + adjustment_l + adjustment_dir, RPM)
+        drive_r.spin(vex.FORWARD, dir_mod * vel_rpm + adjustment_r - adjustment_dir, vex.RPM)
+        drive_l.spin(vex.FORWARD, dir_mod * vel_rpm + adjustment_l + adjustment_dir, vex.RPM)
 
-        vex.wait(MSEC_PER_TICK, MSEC)
+        vex.wait(MSEC_PER_TICK, vex.MSEC)
         
     if do_decel:
-        drive_r.stop(BRAKE)
-        drive_l.stop(BRAKE)
+        drive_r.stop(vex.BRAKE)
+        drive_l.stop(vex.BRAKE)
     else:
-        drive_r.stop(COAST)
-        drive_l.stop(COAST)
+        drive_r.stop(vex.COAST)
+        drive_l.stop(vex.COAST)
 
 def drive_turn(degrees, outer_radius, target_ips, ipss, reversed):
-    # Loop wait times
+    # Loop vex.wait times
     TICK_PER_SEC = 50
     MSEC_PER_TICK = 20
 
@@ -414,27 +409,27 @@ def drive_turn(degrees, outer_radius, target_ips, ipss, reversed):
             adjustment_r = pid_drive_r.adjust(outer_displacement, displacement_r)
             adjustment_l = -1 * pid_drive_l.adjust(inner_displacement, displacement_l)
 
-            drive_r.spin(FORWARD, outer_vel_rpm + adjustment_r, RPM)
-            drive_l.spin(FORWARD, inner_vel_rpm + adjustment_l, RPM)
+            drive_r.spin(vex.FORWARD, outer_vel_rpm + adjustment_r, vex.RPM)
+            drive_l.spin(vex.FORWARD, inner_vel_rpm + adjustment_l, vex.RPM)
         else:                                                                           # right is inner side
             adjustment_r = -1 * pid_drive_r.adjust(inner_displacement, displacement_r)
             adjustment_l = pid_drive_l.adjust(outer_displacement, displacement_l)
 
-            drive_r.spin(FORWARD, outer_vel_rpm + adjustment_r, RPM)
-            drive_l.spin(FORWARD, inner_vel_rpm + adjustment_l, RPM)
+            drive_r.spin(vex.FORWARD, outer_vel_rpm + adjustment_r, vex.RPM)
+            drive_l.spin(vex.FORWARD, inner_vel_rpm + adjustment_l, vex.RPM)
 
         # Exit loop if we're past the desired angle
         if degrees_remaining * dir_mod < 0:
             break
 
-        wait(MSEC_PER_TICK, MSEC)
-    drive_r.stop(BRAKE)
-    drive_l.stop(BRAKE)
+        vex.wait(MSEC_PER_TICK, vex.MSEC)
+    drive_r.stop(vex.BRAKE)
+    drive_l.stop(vex.BRAKE)
 
 # slightly better drive_straight, in theory
 # broken right now
 def drive_linear(inches, max_ips, ipss, do_decel = True):
-    # Loop wait times
+    # Loop vex.wait times
     TICKS_PER_SEC = 50
     MSEC_PER_TICK = 20
 
@@ -481,17 +476,17 @@ def drive_linear(inches, max_ips, ipss, do_decel = True):
         l_vel_rpm = target_vel_l / DRIVE_REV_TO_IN  * 60
 
         # Move drive
-        drive_r.spin(FORWARD, dir_mod * r_vel_rpm + adjustment_r + adjustment_dir, RPM)
-        drive_l.spin(FORWARD, dir_mod * l_vel_rpm + adjustment_l + adjustment_dir, RPM)
+        drive_r.spin(vex.FORWARD, dir_mod * r_vel_rpm + adjustment_r + adjustment_dir, vex.RPM)
+        drive_l.spin(vex.FORWARD, dir_mod * l_vel_rpm + adjustment_l + adjustment_dir, vex.RPM)
 
-        wait(MSEC_PER_TICK, MSEC)
+        vex.wait(MSEC_PER_TICK, vex.MSEC)
 
     if do_decel:
-        drive_r.stop(BRAKE)
-        drive_l.stop(BRAKE)
+        drive_r.stop(vex.BRAKE)
+        drive_l.stop(vex.BRAKE)
     else:
-        drive_r.stop(COAST)
-        drive_l.stop(COAST)
+        drive_r.stop(vex.COAST)
+        drive_l.stop(vex.COAST)
 
 # *Much* faster drive_turn(), but less control over speed, etc.
 # Doesn't work well if arcing on full omni drives
@@ -529,19 +524,21 @@ def turn_pid(degrees, radius_ratio, direction):
         elif speed_r < -100 * abs(radius_ratio):
             speed_r = -100 * abs(radius_ratio)
 
-        drive_r.spin(FORWARD, speed_l, PERCENT)
-        drive_r.spin(FORWARD, speed_l, PERCENT)
-        wait(MSEC_PER_TICK, MSEC)
+        drive_r.spin(vex.FORWARD, speed_l, vex.PERCENT)
+        drive_r.spin(vex.FORWARD, speed_l, vex.PERCENT)
+        vex.wait(MSEC_PER_TICK, vex.MSEC)
 
 # Same idea as turn_pid(), but for drive_straight()
 def straight_pid(dist):
     print("WIP")
 
+
+
 # ./src/tune_pid.py ---
 
+
+
 # ./src/preauton.py ---
-import vex
-from robot_config import *
 
 def preauton():
     brain.screen.clear_screen()
@@ -550,16 +547,16 @@ def preauton():
     while imu.is_calibrating():
         vex.wait(20, vex.TimeUnits.MSEC)
 
+
+
 # ./src/auton.py ---
-from robot_config import *
 
 def autonomous():
     brain.screen.clear_screen()
 
+
+
 # ./src/opcontrol.py ---
-import vex
-from robot_config import *
-from util import *
 
 # Constants
 TNK = 0
@@ -575,15 +572,15 @@ def opcontrol():
     wing_l_switch = EdgeDetection(False)
 
     # Reset drive velocity
-    drive_l.stop(COAST)
-    drive_r.stop(COAST)
+    drive_l.stop(vex.COAST)
+    drive_r.stop(vex.COAST)
 
     while(True):
         # Drivetrain
         opdrive(TSA, 1.0, SENSITIVITY)
 
         # Elevation
-        hang.spin(FORWARD, (btn_right() - btn_y()) * 100, PERCENT)
+        hang.spin(vex.FORWARD, (btn_right() - btn_y()) * 100, vex.PERCENT)
 
         # Set a "shift" key
         shifted = btn_l2()
@@ -591,7 +588,7 @@ def opcontrol():
         # Base layer
         if not shifted:
             # Intake
-            intake.spin(FORWARD, (btn_r1() - btn_r2()) * 100, PERCENT)
+            intake.spin(vex.FORWARD, (btn_r1() - btn_r2()) * 100, vex.PERCENT)
             # Change intake height
             intake_fold.set(fold_switch.is_redge(btn_l1()))
 
@@ -601,21 +598,23 @@ def opcontrol():
             wing_l.set(wing_l_switch.is_redge(btn_l1()))
             wing_r.set(wing_r_switch.is_redge(btn_r1()))
 
-        vex.wait(20, MSEC)
+        vex.wait(20, vex.MSEC)
 
 def opdrive(control_scheme, speed_mod, turn_mod):
     # Tank drive
     if control_scheme == TNK:
-        drive_r.spin(FORWARD, axis_ry() * speed_mod, PERCENT)
-        drive_l.spin(FORWARD, axis_lx() * speed_mod, PERCENT)
+        drive_r.spin(vex.FORWARD, axis_ry() * speed_mod, vex.PERCENT)
+        drive_l.spin(vex.FORWARD, axis_lx() * speed_mod, vex.PERCENT)
     # Two stick arcade
     elif control_scheme == TSA:
-        drive_r.spin(FORWARD, (axis_lx() - axis_rx() * turn_mod) * speed_mod, PERCENT)
-        drive_l.spin(FORWARD, (axis_lx() + axis_rx() * turn_mod) * speed_mod, PERCENT)
+        drive_r.spin(vex.FORWARD, (axis_lx() - axis_rx() * turn_mod) * speed_mod, vex.PERCENT)
+        drive_l.spin(vex.FORWARD, (axis_lx() + axis_rx() * turn_mod) * speed_mod, vex.PERCENT)
     # One stick arcade
     elif control_scheme == OSA:
-        drive_r.spin(FORWARD, (axis_ly() - axis_lx() * turn_mod) * speed_mod, PERCENT)
-        drive_l.spin(FORWARD, (axis_ly() + axis_lx() * turn_mod) * speed_mod, PERCENT)
+        drive_r.spin(vex.FORWARD, (axis_ly() - axis_lx() * turn_mod) * speed_mod, vex.PERCENT)
+        drive_l.spin(vex.FORWARD, (axis_ly() + axis_lx() * turn_mod) * speed_mod, vex.PERCENT)
+
+
 
 # ./src/main.py ---
 # ---------------------------------------------------------------------------- #
@@ -629,21 +628,15 @@ def opdrive(control_scheme, speed_mod, turn_mod):
 
 # Library imports
 # from vex import *
-import vex
-import math
 
 # from robot_config import *
 # import auton
-import opcontrol
-import preauton
-import tune_pid
-import util
 
-preauton.preauton()
+preauton()
 
 do_testing = False
 if do_testing:
     print("do nothing")
 else:
     print("start of main program")
-    field_controller = vex.Competition(opcontrol.opcontrol, opcontrol.opcontrol)
+    field_controller = vex.Competition(opcontrol, opcontrol)

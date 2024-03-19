@@ -3,8 +3,6 @@
 
 import math
 import vex
-from robot_config import *
-
 # Conversions
 global RAD_TO_DEG
 RAD_TO_DEG = 57.29578
@@ -45,8 +43,6 @@ global REV
 REV = vex.RotationUnits.REV
 global DEG
 DEG = vex.RotationUnits.DEG
-
-
 
 # Globally tracked things
 class TrackedGlobals:

@@ -14,16 +14,17 @@ import math
 
 # from robot_config import *
 # import auton
-import opcontrol
-import preauton
-import tune_pid
-import util
+from opcontrol import *
+from preauton import *
+from auton import *
+from tune_pid import *
+from util import *
 
-preauton.preauton()
+preauton()
 
 do_testing = False
 if do_testing:
     print("do nothing")
 else:
     print("start of main program")
-    field_controller = vex.Competition(opcontrol.opcontrol, opcontrol.opcontrol)
+    field_controller = vex.Competition(opcontrol, opcontrol)

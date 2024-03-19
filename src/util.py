@@ -65,9 +65,9 @@ def pos_drive_r():
 def pos_drive_l():
     return drive_l.position(REV) * DRIVE_REV_TO_IN
 def vel_drive_r():
-    return drive_r.velocity(RPM) * DRIVE_REV_TO_IN
+    return drive_r.velocity(vex.RPM) * DRIVE_REV_TO_IN
 def vel_drive_l():
-    return drive_l.velocity(RPM) * DRIVE_REV_TO_IN
+    return drive_l.velocity(vex.RPM) * DRIVE_REV_TO_IN
 
 def imu_rotation():
     return imu.rotation() * all_globals.imu_correction
