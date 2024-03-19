@@ -1,0 +1,11 @@
+./src/stddefs.py
+./src/robot_config.py
+./src/util.py
+./src/pid.py
+./src/movement.py
+./src/tune_pid.py
+./src/preauton.py
+./src/auton.py
+./src/opcontrol.py
+./src/main0.py
+EOF

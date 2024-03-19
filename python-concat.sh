@@ -1,55 +1,29 @@
-# Create file
 OUTPUT_FILE="./tmp.tmp"
+READ_FILE="./all-files.txt"
+IMPORTS="./include/imports.py"
 
-INPUT_FILE="./src/stddefs.py"
-echo "\n\n\n# $INPUT_FILE ---" > $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
+# Create and clear a temporary file
+echo "" > $OUTPUT_FILE
 
-INPUT_FILE="./src/robot_config.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
+# Add specified files
+while read line;
+do
+    INPUT_FILE=$line
+    # Add a header before each file
+    echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
 
-INPUT_FILE="./src/util.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
-
-INPUT_FILE="./src/pid.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
-
-INPUT_FILE="./src/movement.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
-
-INPUT_FILE="./src/tune_pid.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
-
-INPUT_FILE="./src/preauton.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
-
-INPUT_FILE="./src/auton.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
-
-INPUT_FILE="./src/opcontrol.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
-
-INPUT_FILE="./src/main.py"
-echo "\n\n\n# $INPUT_FILE ---" >> $OUTPUT_FILE
-cat $INPUT_FILE >> $OUTPUT_FILE
+    cat $INPUT_FILE >> $OUTPUT_FILE
+done < $READ_FILE
 
 # Delete import lines
-gsed -i "/^from /d" $OUTPUT_FILE
-gsed -i "/^import /d" $OUTPUT_FILE
+sed -i.bak "/^from /d" $OUTPUT_FILE
+sed -i.bak "/^import /d" $OUTPUT_FILE
+rm ${OUTPUT_FILE}.bak
 
 INPUT_FILE=$OUTPUT_FILE
 OUTPUT_FILE="./main.py"
 # Add stdlib imports
-echo "import vex
-import math" > $OUTPUT_FILE
+cat $IMPORTS > $OUTPUT_FILE
 
 # Add the rest of the file
 cat $INPUT_FILE >> $OUTPUT_FILE
