@@ -5,7 +5,7 @@ multifile projects anyway, I've created a script that will dump all the text
 from a set of files into one titled `main.py`.
 
 To use:  
-1. List all the source files _in order_, from top to bottom, in `all-files.text`
+1. List all the source files _in order_, from top to bottom, in `all-files.txt`
 2. List all the standard libraries to include in `/include/imports.py`
 3. Make the script `python-concat.sh` executable with `chmod +x`
 4. Run the script `python-concat.sh`
