@@ -10,6 +10,9 @@ To use:
 3. Make the script `python-concat.sh` executable with `chmod +x`
 4. Run the script `python-concat.sh`
 
+This script was made for macOS. If you use Linux, you may need to modify the 
+`sed` lines slightly. If you're on Windows, good luck.
+
 Important Notes:  
 - Any user-defined modules must be imported with:
 ```py
@@ -24,4 +27,4 @@ from module_name import *
 
 For the most part, this is basic boilerplate code that every VRC team should 
 have. The interesting stuff is in `/src/pid.py` and `/src/movement.py`. They 
-have the PID class and functions for consistent, fast driver-control functions.
+have the PID class and functions for consistent, fast drive-control functions.

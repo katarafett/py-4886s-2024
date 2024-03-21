@@ -13,7 +13,7 @@
 		"sdkVersion": "V5_1_0_1_19",
 		"python": {
 			"main": "src/main.py",
-            "opcontrol": "src/opcontrol.py"
+			"opcontrol": "src/opcontrol.py"
 		}
 	}
 }
