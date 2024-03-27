@@ -52,9 +52,7 @@ def handle_acceleration(position, distance, velocity, max_velocity, acceleration
     return max_velocity
 
 def within_range(value, base_value, range):
-    if value <= base_value + range and value >= base_value - range:
-        return True
-    return False
+    return value <= base_value + range and value >= base_value - range
 
 # SHORTHAND
 global DRIVE_REV_TO_IN

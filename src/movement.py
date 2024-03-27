@@ -8,7 +8,7 @@ import vex
 def drive_straight(inches, target_ips, ipss, do_decel = True):
     # Loop vex.wait times
     TICK_PER_SEC = 50    # tick per sec
-    MSEC_PER_TICK = 20   # ms per tick
+    MSEC_PER_TICK = 1000 / 20   # ms per tick
 
     # PID constants
     DRIVE_KP = 0.005
@@ -56,7 +56,7 @@ def drive_straight(inches, target_ips, ipss, do_decel = True):
 
         adjustment_r = pid_drive_r.adjust(expected_displacement, displacement_r)
         adjustment_l = pid_drive_l.adjust(expected_displacement, displacement_l)
-        adjustment_dir = pid_dir.adjust(all_globals.target_heading, displacement_l)
+        adjustment_dir = pid_dir.adjust(all_globals.target_heading, imu_rotation)
 
         vel_rpm = ips / DRIVE_REV_TO_IN * 60
         

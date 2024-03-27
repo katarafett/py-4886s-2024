@@ -21,13 +21,13 @@ class Pid:
     def tune_ki(self, value, mod):
         self.ki += value * mod
         print("ki: " + self.ki + "")
-        brain.screen.set_cursor(3, 4)
+        brain.screen.set_cursor(5, 4)
         brain.screen.print("ki: " + self.ki + "")
 
     def tune_kd(self, value, mod):
         self.kd += value * mod
         print("kd: " + self.kd + "")
-        brain.screen.set_cursor(3, 4)
+        brain.screen.set_cursor(7, 4)
         brain.screen.print("kd: " + self.kd + "")
 
     def adjust(self, setpoint, sensor_value):
